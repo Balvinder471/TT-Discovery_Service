@@ -19,6 +19,7 @@ pipelines:
                 AWS_SECRET_ACCESS_KEY: $PUSH_AWS_SECRET
                 AWS_DEFAULT_REGION: $AWS_REGION
                 IMAGE_NAME: $IMAGE
+                TAGS: "${TAG_NAME}"
 
 definitions:
   services:
