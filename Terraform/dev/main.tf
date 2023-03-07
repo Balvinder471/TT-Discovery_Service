@@ -3,7 +3,7 @@ data "aws_ami" "app_ami" {
 
   filter {
     name   = "name"
-    values = ["bitnami-tomcat-*-x86_64-hvm-ebs-nami"]
+    values = [var.ami_filter.name]
   }
 
   filter {
@@ -11,7 +11,7 @@ data "aws_ami" "app_ami" {
     values = ["hvm"]
   }
 
-  owners = ["979382823631"] # Bitnami
+  owners = [var.ami_filter.owner] # Bitnami
 }
 
 data "aws_vpc" "default" {
@@ -19,8 +19,8 @@ data "aws_vpc" "default" {
 }
 
 resource "aws_instance" "web" {
-  ami           = data.aws_ami.app_ami.id
-  instance_type = "t2.micro"
+  ami                    = data.aws_ami.app_ami.id
+  instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.http.id]
   tags = {
     Name = "HelloWorld"
@@ -28,9 +28,9 @@ resource "aws_instance" "web" {
 }
 
 resource "aws_security_group" "http" {
-  name = "allow-http"
+  name        = "allow-http"
   description = "Allow http in and all out"
-  vpc_id = data.aws_vpc.default.id
+  vpc_id      = data.aws_vpc.default.id
 }
 
 resource "aws_security_group_rule" "http_in" {
@@ -39,7 +39,7 @@ resource "aws_security_group_rule" "http_in" {
   security_group_id = aws_security_group.http.id
   to_port           = 80
   type              = "ingress"
-  cidr_blocks = ["0.0.0.0/0"]
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 resource "aws_security_group_rule" "all_out" {
